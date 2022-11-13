@@ -23,28 +23,24 @@
 
 #region ================== Namespaces
 
-using CodeImp.DoomBuilder.Windows;
+using System;
 
 #endregion
 
 namespace CodeImp.DoomBuilder.UDBScript
 {
-	public partial class UDBScriptErrorForm : DelayedForm
+	sealed internal class UDBScriptSettingsAttribute : Attribute
 	{
+		#region ================== Properties
+
+		public int MinVersion { get; set; }
+
+		#endregion
+
 		#region ================== Constructors
 
-		public UDBScriptErrorForm(string message, string stacktrace, string internalstacktrace)
+		public UDBScriptSettingsAttribute()
 		{
-			InitializeComponent();
-
-			tbStackTrace.Text = message + "\r\n" + stacktrace;
-			tbStackTrace.Select(0, 0);
-
-			tbInternalStackTrace.Text = internalstacktrace;
-			tbInternalStackTrace.Select(0, 0);
-
-			if (string.IsNullOrWhiteSpace(stacktrace))
-				tabControl1.SelectedIndex = 1;
 		}
 
 		#endregion
