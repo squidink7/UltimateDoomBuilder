@@ -88,14 +88,8 @@ namespace CodeImp.DoomBuilder
 		/// </remarks>
 		static public FileLockCheckResult CheckFile(string path)
 		{
-			//File locks are extremely rare on Linux, and using methods below to check cause a crash. Should be safe to assume it's not being written to.
-			if (Environment.OSVersion.Platform == PlatformID.Unix)
-			{
-				return new FileLockCheckResult { Error = "" };
-			}
-			
-			//mxd. Do it the clunky way? (WinXP)
-			if(Environment.OSVersion.Platform == PlatformID.Unix && Environment.OSVersion.Version.Major < 6)
+			//Fallback to traditional checking on Linux or WinXP
+			if(Environment.OSVersion.Platform == PlatformID.Unix || Environment.OSVersion.Version.Major < 6)
 			{
 				bool locked = false;
 				
@@ -105,8 +99,7 @@ namespace CodeImp.DoomBuilder
 				}
 				catch(IOException e)
 				{
-					int errorcode = Marshal.GetHRForException(e) & ((1 << 16) - 1);
-					locked = (errorcode == 32 || errorcode == 33);
+					locked = true;
 				}
 
 				return new FileLockCheckResult { Error = (locked ? "Unable to save the map. Map file is locked by another process." : string.Empty) };
