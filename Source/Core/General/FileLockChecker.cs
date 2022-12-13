@@ -88,8 +88,14 @@ namespace CodeImp.DoomBuilder
 		/// </remarks>
 		static public FileLockCheckResult CheckFile(string path)
 		{
+			//File locks are extremely rare on Linux, and using methods below to check cause a crash. Should be safe to assume it's not being written to.
+			if (Environment.OSVersion.Platform == PlatformID.Unix)
+			{
+				return new FileLockCheckResult { Error = "" };
+			}
+			
 			//mxd. Do it the clunky way? (WinXP)
-			if(Environment.OSVersion.Version.Major < 6)
+			if(Environment.OSVersion.Platform == PlatformID.Unix && Environment.OSVersion.Version.Major < 6)
 			{
 				bool locked = false;
 				
