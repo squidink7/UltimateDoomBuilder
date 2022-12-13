@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-mono Builder.exe
+mono $(dirname $0)Builder.exe
